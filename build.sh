@@ -14,18 +14,22 @@ clean() {
 
 dev() {
     mkdir -p output
+    mkdir -p input
     docker run --rm --gpus=all --entrypoint=sh \
         -v huggingface:/home/huggingface/.cache/huggingface \
         -v "$PWD"/output:/home/huggingface/output \
+        -v "$PWD"/input:/home/huggingface/input \
         -it "$CWD"
 }
 
 run() {
     shift
     mkdir -p output
+    mkdir -p input
     docker run --rm --gpus=all \
         -v huggingface:/home/huggingface/.cache/huggingface \
         -v "$PWD"/output:/home/huggingface/output \
+        -v "$PWD"/input:/home/huggingface/input \
         "$CWD" "$@"
 }
 
