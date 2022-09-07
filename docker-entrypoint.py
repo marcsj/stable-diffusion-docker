@@ -93,8 +93,8 @@ def image_stable_diffusion(
 
         for i, image in enumerate(images["sample"]):
             image.save(
-                "output/%s_from_image_iter_%d.png"
-                % (prefix, j * samples + i + 1)
+                "output/%s__steps_%d__scale_%0.2f____n_%d.png"
+                % (prefix, steps, scale, j * samples + i + 1)
             )
 
     print("stable diffusion image: completed", iso_date_time(), flush=True)
@@ -130,6 +130,7 @@ def main():
         help="Number of times to run pipeline",
     )
     parser.add_argument(
+
         "--height", type=int, nargs="?", default=512, help="Image height in pixels"
     )
     parser.add_argument(
@@ -197,10 +198,10 @@ def main():
         args.seed = torch.random.seed()
 
     # get pipeline for running stable diffusion
-    pipe = load_pipeline(args.init_image, args.model, args.device, args.skip)
+    pipe = load_pipeline(args.image, args.model, args.device, args.skip)
 
     # execute stable diffusion for each iteration per sample
-    if args.init_image is not None:
+    if args.image is not None:
         image = load_image(args.image)
         image_stable_diffusion(pipe, args.prompt, prefix, image, args.steps, args.scale, args.samples, args.iters, args.device, args.strength)
     else:
