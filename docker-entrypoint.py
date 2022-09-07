@@ -15,7 +15,7 @@ def skip_safety_checker(images, *args, **kwargs):
 
 
 def load_image(
-    path, width, height,
+    path
 ):
     image = Image.open(f"input/{path}").convert("RGB")
     w, h = image.size
@@ -35,7 +35,7 @@ def load_pipeline(
 
     if init_image is not None:
         pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
-        model_name, torch_dtype=torch.float32, revision="main", use_auth_token=token
+        model_name, torch_dtype=torch.float16, revision="fp16", use_auth_token=token
         ).to(device)
     else:
         pipe = StableDiffusionPipeline.from_pretrained(
@@ -84,7 +84,7 @@ def image_stable_diffusion(
     for j in range(iters):
         with autocast(device):
             images = pipe(
-                [prompt] * samples,
+                prompt=prompt,
                 init_image=init_image,
                 num_inference_steps=steps,
                 strength=strength,
@@ -93,8 +93,8 @@ def image_stable_diffusion(
 
         for i, image in enumerate(images["sample"]):
             image.save(
-                "output/%s__steps_%d__scale_%0.2f__seed_%d__n_%d.png"
-                % (prefix, steps, scale, seed, j * samples + i + 1)
+                "output/%s_from_image_iter_%d.png"
+                % (prefix, j * samples + i + 1)
             )
 
     print("stable diffusion image: completed", iso_date_time(), flush=True)
@@ -201,7 +201,7 @@ def main():
 
     # execute stable diffusion for each iteration per sample
     if args.init_image is not None:
-        image = load_image(args.init_image, args.width, args.height)
+        image = load_image(args.init_image)
         image_stable_diffusion(pipe, args.prompt, prefix, image, args.steps, args.scale, args.samples, args.iters, args.device, args.strength)
     else:
         prompt_stable_diffusion(pipe, args.prompt, prefix, args.steps, args.scale, args.seed, args.samples, args.height, args.width, args.iters, args.device)
