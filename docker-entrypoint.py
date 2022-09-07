@@ -113,7 +113,7 @@ def main():
         "--prompt", type=str, nargs="?", help="The prompt to render into an image"
     )
     parser.add_argument(
-        "--init_image", type=str, nargs="?", help="The image to use for image to image"
+        "--image", type=str, nargs="?", help="The image to use for image to image"
     )
     parser.add_argument(
         "--samples",
@@ -201,7 +201,7 @@ def main():
 
     # execute stable diffusion for each iteration per sample
     if args.init_image is not None:
-        image = load_image(args.init_image)
+        image = load_image(args.image)
         image_stable_diffusion(pipe, args.prompt, prefix, image, args.steps, args.scale, args.samples, args.iters, args.device, args.strength)
     else:
         prompt_stable_diffusion(pipe, args.prompt, prefix, args.steps, args.scale, args.seed, args.samples, args.height, args.width, args.iters, args.device)

@@ -4,12 +4,21 @@ Runs the official [Stable Diffusion v1.4](https://huggingface.co/CompVis/stable-
 release on [Huggingface](https://huggingface.co/) in a GPU accelerated Docker
 container.
 
+Text to Image:
 ```sh
 ./build.sh run 'An impressionist painting of a parakeet eating spaghetti in the desert'
 ```
 
 ![An impressionist painting of a parakeet eating spaghetti in the desert 1](img/An_impressionist_painting_of_a_parakeet_eating_spaghetti_in_the_desert_s1.png)
 ![An impressionist painting of a parakeet eating spaghetti in the desert 2](img/An_impressionist_painting_of_a_parakeet_eating_spaghetti_in_the_desert_s2.png)
+
+Image to Image:
+```sh
+./build.sh run --image sketch-mountains-input.jpg 'A fantasy landscape, trending on artstation'
+```
+
+![Sketch](img/sketch-mountains-input.jpg)
+![Computer Generated](img/sketch-mountains-output.png)
 
 ## Before you start
 
@@ -42,26 +51,32 @@ To build:
 
 To run:
 
+Text to image:
 ```sh
 ./build.sh run 'A high tech solarpunk utopia in the Amazon rainforest'
 ```
 
+Image to image:
+```sh
+./build.sh run --image test_image.jpeg 'Beautiful sun shining on the garbage island'
+```
+
 ### Options
 
-Some of the options from [`txt2img.py`](https://github.com/CompVis/stable-diffusion/blob/main/scripts/txt2img.py)
+Some options similar to [`txt2img.py`](https://github.com/CompVis/stable-diffusion/blob/main/scripts/txt2img.py)
 are implemented for compatibility:
 
 * `--prompt [PROMPT]`: the prompt to render into an image
-* `--n_samples [N_SAMPLES]`: number of images to create per run (default 1)
-* `--n_iter [N_ITER]`: number of times to run pipeline (default 1)
-* `--H [H]`: image height in pixels (default 512)
-* `--W [W]`: image width in pixels (default 512)
+* `--samples [N_SAMPLES]`: number of images to create per run (default 1)
+* `--iters [N_ITER]`: number of times to run pipeline (default 1)
+* `--image [FILENAME]`: file in the input folder to use for img2img
+* `--height [H]`: image height in pixels (default 512)
+* `--width [W]`: image width in pixels (default 512)
 * `--scale [SCALE]`: unconditional guidance scale (default 7.5)
 * `--seed [SEED]`: RNG seed for repeatability (default is a random seed)
-* `--ddim_steps [DDIM_STEPS]`: number of sampling steps (default 50)
-
-Other options:
-
+* `--steps [DDIM_STEPS]`: number of sampling steps (default 50)
+* `--model [MODEL]`: model to use. (default Compvis/stable-diffusion-v1-4)
+* `--device [device]`: device to use, either cuda or cpu for now. (default cuda)
 * `--half`: use float16 tensors instead of float32 (default float32)
 * `--skip`: skip safety checker
 
