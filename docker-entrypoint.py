@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-import argparse, datetime, random, time
+import argparse
+import datetime
+import random
+import time
 import torch
 from PIL import Image
 from torch import autocast
@@ -20,7 +23,8 @@ def load_image(
     image = Image.open(f"input/{path}").convert("RGB")
     w, h = image.size
     print(f"loaded input image of size ({w}, {h}) from {path}")
-    w, h = map(lambda x: x - x % 32, (w, h))  # resize to integer multiple of 32
+    # resize to integer multiple of 32
+    w, h = map(lambda x: x - x % 32, (w, h))
     image = image.resize((w, h))
     return image
 
@@ -35,13 +39,12 @@ def load_pipeline(
 
     if init_image is not None:
         pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
-        model_name, torch_dtype=torch.float16, revision="fp16", use_auth_token=token
+            model_name, torch_dtype=torch.float16, revision="fp16", use_auth_token=token
         ).to(device)
     else:
         pipe = StableDiffusionPipeline.from_pretrained(
-        model_name, torch_dtype=torch.float32, revision="main", use_auth_token=token
+            model_name, torch_dtype=torch.float32, revision="main", use_auth_token=token
         ).to(device)
-    
 
     if skip:
         pipe.safety_checker = skip_safety_checker
@@ -101,7 +104,9 @@ def image_stable_diffusion(
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Create images from a text prompt.")
+    parser = argparse.ArgumentParser(
+        description="Create images from a text prompt."
+    )
     parser.add_argument(
         "prompt0",
         metavar="PROMPT",
@@ -203,9 +208,11 @@ def main():
     # execute stable diffusion for each iteration per sample
     if args.image is not None:
         image = load_image(args.image)
-        image_stable_diffusion(pipe, args.prompt, prefix, image, args.steps, args.scale, args.samples, args.iters, args.device, args.strength)
+        image_stable_diffusion(pipe, args.prompt, prefix, image, args.steps,
+                               args.scale, args.samples, args.iters, args.device, args.strength)
     else:
-        prompt_stable_diffusion(pipe, args.prompt, prefix, args.steps, args.scale, args.seed, args.samples, args.height, args.width, args.iters, args.device)
+        prompt_stable_diffusion(pipe, args.prompt, prefix, args.steps, args.scale,
+                                args.seed, args.samples, args.height, args.width, args.iters, args.device)
 
 
 if __name__ == "__main__":
