@@ -1,7 +1,7 @@
 FROM tensorflow/tensorflow:latest-gpu
 
-RUN pip install pillow torch transformers diffusers --extra-index-url https://download.pytorch.org/whl/cu116
-RUN pip install --upgrade https://github.com/huggingface/diffusers/tarball/master
+RUN pip install pillow torch transformers --extra-index-url https://download.pytorch.org/whl/cu116
+RUN pip install diffusers
 
 RUN useradd -m huggingface
 
